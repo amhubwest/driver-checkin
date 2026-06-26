@@ -498,7 +498,7 @@ textarea::placeholder {
     <h2>You're checked in</h2>
     <p>Pull up to the assigned door. A team member will meet you.</p>
     <div class="receipt" id="receipt"></div>
-    <button class="btn secondary" id="resetBtn">Check in another driver</button>
+    <button class="btn secondary" id="resetBtn">Return to Previous Screen</button>
   </div>
 </div>
 
@@ -705,17 +705,15 @@ async function submit() {
   if (SHARED_SECRET) payload.secret = SHARED_SECRET;
 
   try {
-    // The Power Automate endpoint does not return CORS headers, so we send
-    // a "simple" request (text/plain) in no-cors mode to avoid a blocked
-    // preflight. The response is opaque and can't be read from the browser;
-    // a resolved fetch means the request was delivered. This is intentional
-    // fire-and-forget — the flow's run history is the source of truth.
-    await fetch(CHECKIN_FLOW_URL, {
+    const res = await fetch(CHECKIN_FLOW_URL, {
       method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
+    if (!res.ok) {
+      const text = await res.text().catch(() => '');
+      throw new Error('HTTP ' + res.status + (text ? ': ' + text.slice(0, 160) : ''));
+    }
     showDone(payload);
   } catch (err) {
     console.error(err);
