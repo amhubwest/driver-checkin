@@ -508,7 +508,7 @@ textarea::placeholder {
 //  "Driver Check-In" Power Automate flow between the quotes.
 //  (Do NOT reuse the raffle flow URLs.)
 // ============================================================
-const CHECKIN_FLOW_URL = "PASTE_YOUR_CHECKIN_FLOW_URL";
+const CHECKIN_FLOW_URL = "https://defaultfb4c0aee6cd2482fa1a5717e7c0249.6b.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/d2ba1a052acb433f86b802f40942b2cf/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=K4UoiiJm0XLNlSElrfmbSu3dcVrLVNHR2wZorbgGVHo";
 
 // Optional: if your flow checks a shared secret, set the same
 // value here. Leave "" to send nothing.
@@ -705,15 +705,17 @@ async function submit() {
   if (SHARED_SECRET) payload.secret = SHARED_SECRET;
 
   try {
-    const res = await fetch(CHECKIN_FLOW_URL, {
+    // The Power Automate endpoint does not return CORS headers, so we send
+    // a "simple" request (text/plain) in no-cors mode to avoid a blocked
+    // preflight. The response is opaque and can't be read from the browser;
+    // a resolved fetch means the request was delivered. This is intentional
+    // fire-and-forget — the flow's run history is the source of truth.
+    await fetch(CHECKIN_FLOW_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
       body: JSON.stringify(payload)
     });
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error('HTTP ' + res.status + ': ' + text.slice(0, 140));
-    }
     showDone(payload);
   } catch (err) {
     console.error(err);
