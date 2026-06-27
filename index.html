@@ -455,7 +455,7 @@ textarea::placeholder {
     </div>
 
     <div class="field">
-      <label>PO / PRO / Booking / Reference #</label>
+      <label>PO / PRO / Booking / Reference # <span class="req">*</span></label>
       <div class="input-wrap">
         <span class="input-icon"><svg width="18" height="18"><use href="#i-hash"/></svg></span>
         <input type="text" id="reference" placeholder="PO / PRO / BOOKING / REFERENCE NUMBER">
@@ -677,6 +677,7 @@ async function submit() {
   if (!driverName) return setStatus('Enter the driver name.', 'error');
   if (!carrier) return setStatus('Enter the carrier / company.', 'error');
   if (!truckTrailer) return setStatus('Enter the truck / trailer / container number.', 'error');
+  if (!reference) return setStatus('Enter the PO / PRO / booking / reference number.', 'error');
 
   if (!CHECKIN_FLOW_URL || CHECKIN_FLOW_URL.includes('PASTE_')) {
     return setStatus('CHECKIN_FLOW_URL not configured. Edit the HTML and paste your Power Automate trigger URL.', 'error');
