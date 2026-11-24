@@ -142,6 +142,16 @@ header {
 .seg-btn.active.dropoff { background: var(--teal); color: #fff; box-shadow: 0 4px 12px rgba(26,188,156,0.3); }
 .seg-btn.active.pickup { background: var(--orange-deep); color: #fff; box-shadow: 0 4px 12px rgba(231,111,81,0.32); }
 .seg-btn.active.entity { background: var(--navy); color: #fff; box-shadow: 0 4px 12px rgba(14,26,46,0.25); }
+/* T44b: Rainin blue / Biotix red (brand colours) */
+.seg-btn.entity[data-entity="Rainin"]:not(.active) { background: #0067b1; color: #fff; box-shadow: 0 3px 10px rgba(0,103,177,0.28); }
+.seg-btn.entity[data-entity="Biotix"]:not(.active) { background: #d71920; color: #fff; box-shadow: 0 3px 10px rgba(215,25,32,0.28); }
+.seg-btn.entity[data-entity="Rainin"]:hover:not(.active) { background: #00508a; color: #fff; }
+.seg-btn.entity[data-entity="Biotix"]:hover:not(.active) { background: #b0141a; color: #fff; }
+.seg-btn.active.entity[data-entity="Rainin"] { background: #0067b1; box-shadow: 0 4px 12px rgba(0,103,177,0.35); }
+.seg-btn.active.entity[data-entity="Biotix"] { background: #d71920; box-shadow: 0 4px 12px rgba(215,25,32,0.35); }
+/* T44b: step-by-step form - step 1 = direction only, step 2 = + entity, step 3 = full card */
+#formPanel[data-step="1"] > :not(.step-dir) { display: none !important; }
+#formPanel[data-step="2"] > :not(.step-dir):not(.step-entity) { display: none !important; }
 
 .field { margin-bottom: 16px; }
 .field label {
@@ -418,9 +428,9 @@ textarea::placeholder {
     </div>
   </header>
 
-  <div class="panel" id="formPanel">
-    <span class="section-label">I am here to</span>
-    <div class="seg" id="dir">
+  <div class="panel" id="formPanel" data-step="1">
+    <span class="section-label step-dir">I am here to <span class="opt">(click one)</span></span>
+    <div class="seg step-dir" id="dir">
       <button type="button" class="seg-btn dropoff" data-dir="Drop-off">
         <span class="icon"><svg width="20" height="20"><use href="#i-down"/></svg></span>Drop off
       </button>
@@ -429,8 +439,8 @@ textarea::placeholder {
       </button>
     </div>
 
-    <span class="section-label">For which Mettler Toledo entity?</span>
-    <div class="seg" id="entity">
+    <span class="section-label step-entity">For which Mettler Toledo entity? <span class="opt">(click one)</span></span>
+    <div class="seg step-entity" id="entity">
       <button type="button" class="seg-btn entity" data-entity="Rainin">Rainin</button>
       <button type="button" class="seg-btn entity" data-entity="Biotix">Biotix</button>
     </div>
@@ -549,6 +559,7 @@ dirEl.querySelectorAll('.seg-btn').forEach(btn => {
     dirEl.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     direction = btn.dataset.dir;
+    if (formPanel.dataset.step === '1') formPanel.dataset.step = '2';
     clearStatus();
   });
 });
@@ -559,6 +570,7 @@ entityEl.querySelectorAll('.seg-btn').forEach(btn => {
     entityEl.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     entity = btn.dataset.entity;
+    if (formPanel.dataset.step !== '3') formPanel.dataset.step = '3';
     clearStatus();
   });
 });
@@ -768,6 +780,7 @@ document.getElementById('resetBtn').addEventListener('click', () => {
   clearStatus();
   submitBtn.disabled = false;
   donePanel.classList.remove('show');
+  formPanel.dataset.step = '1';
   formPanel.style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 });
