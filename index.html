@@ -152,6 +152,12 @@ header {
 /* T44b: step-by-step form - step 1 = direction only, step 2 = + entity, step 3 = full card */
 #formPanel[data-step="1"] > :not(.step-dir) { display: none !important; }
 #formPanel[data-step="2"] > :not(.step-dir):not(.step-entity) { display: none !important; }
+/* T44c: Drop off = navy, Pick up = orange */
+.seg-btn.dropoff:not(.active) { background: var(--navy); color: #fff; box-shadow: 0 3px 10px rgba(14,26,46,0.25); }
+.seg-btn.dropoff:hover:not(.active) { background: #1b2b47; color: #fff; }
+.seg-btn.active.dropoff { background: var(--navy); color: #fff; box-shadow: 0 4px 12px rgba(14,26,46,0.3); }
+.seg-btn.pickup:not(.active) { background: var(--orange); color: #fff; }
+.seg-btn.active.pickup { background: var(--orange); color: #fff; box-shadow: 0 4px 12px rgba(247,127,0,0.35); }
 
 .field { margin-bottom: 16px; }
 .field label {
