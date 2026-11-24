@@ -134,7 +134,11 @@ header {
   gap: 10px;
 }
 .seg-btn .icon { display: flex; }
-.seg-btn:hover:not(.active) { color: var(--navy); background: rgba(255,255,255,0.6); }
+/* T44: unchosen choices are orange so drivers know to tap one; once one is chosen the other greys out */
+.seg-btn:not(.active) { background: var(--orange); color: #fff; box-shadow: 0 3px 10px rgba(247,127,0,0.28); }
+.seg-btn:hover:not(.active) { color: #fff; background: var(--orange-deep); }
+.seg:has(.seg-btn.active) .seg-btn:not(.active) { background: transparent; color: var(--text-dim); box-shadow: none; }
+.seg:has(.seg-btn.active) .seg-btn:hover:not(.active) { color: var(--navy); background: rgba(255,255,255,0.6); }
 .seg-btn.active.dropoff { background: var(--teal); color: #fff; box-shadow: 0 4px 12px rgba(26,188,156,0.3); }
 .seg-btn.active.pickup { background: var(--orange-deep); color: #fff; box-shadow: 0 4px 12px rgba(231,111,81,0.32); }
 .seg-btn.active.entity { background: var(--navy); color: #fff; box-shadow: 0 4px 12px rgba(14,26,46,0.25); }
@@ -150,6 +154,7 @@ header {
   margin-bottom: 8px;
 }
 .field label .req { color: var(--orange-deep); }
+.field label .opt { color: var(--text-dim); opacity: 0.8; text-transform: none; letter-spacing: 0.5px; }
 
 .input-wrap { position: relative; display: flex; align-items: center; }
 .input-wrap .input-icon {
@@ -463,7 +468,7 @@ textarea::placeholder {
     </div>
 
     <div class="field">
-      <label>Notes</label>
+      <label>Notes <span class="opt">(optional)</span></label>
       <textarea id="notes" placeholder="Anything we should know (optional)"></textarea>
     </div>
 
